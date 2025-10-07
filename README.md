@@ -17,9 +17,28 @@ A Kubernetes deployment of HTTPBin with security best practices and high availab
 
 ## Setup
 
-### macOS/Linux
+### macOS
 ```bash
-brew install minikube
+brew install minikube kubectl
+minikube start
+```
+
+### Linux
+```bash
+# Ubuntu/Debian
+curl -LO https://storage.googleapis.com/minikube/releases/latest/minikube-linux-amd64
+sudo install minikube-linux-amd64 /usr/local/bin/minikube
+sudo snap install kubectl --classic
+
+# CentOS/RHEL/Fedora
+curl -LO https://storage.googleapis.com/minikube/releases/latest/minikube-linux-amd64
+sudo install minikube-linux-amd64 /usr/local/bin/minikube
+sudo dnf install kubectl
+
+# Arch Linux
+sudo pacman -S minikube kubectl
+
+# Start Minikube
 minikube start
 ```
 
@@ -42,7 +61,7 @@ minikube start
 
 ## Usage
 
-### macOS/Linux
+### macOS & Linux
 
 Deploy:
 ```bash
