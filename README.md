@@ -82,7 +82,6 @@ Clean up:
 
 Deploy:
 ```batch
-REM Using batch scripts
 scripts\deploy.bat
 ```
 
@@ -106,8 +105,6 @@ kubectl apply -f k8s/service.yaml
 # Wait for deployment
 kubectl wait --for=condition=available deployment/httpbin-deployment -n httpbin-demo --timeout=300s
 ```
-
-## Cross-Platform Access
 
 ## Cross-Platform Access
 
