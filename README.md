@@ -13,17 +13,36 @@ A Kubernetes deployment of HTTPBin with security best practices and high availab
 
 - Minikube
 - kubectl
-- curl
+- curl (or PowerShell's Invoke-WebRequest on Windows)
 
 ## Setup
 
-Install and start Minikube:
+### macOS/Linux
 ```bash
 brew install minikube
 minikube start
 ```
 
+### Windows
+```powershell
+# Option 1: Using Chocolatey
+choco install minikube kubernetes-cli
+
+# Option 2: Using Scoop
+scoop install minikube kubectl
+
+# Option 3: Manual installation
+# Download from GitHub releases:
+# - Minikube: https://github.com/kubernetes/minikube/releases
+# - kubectl: https://kubernetes.io/docs/tasks/tools/install-kubectl-windows/
+
+# Start Minikube
+minikube start
+```
+
 ## Usage
+
+### macOS/Linux
 
 Deploy:
 ```bash
@@ -35,30 +54,78 @@ Test:
 ./scripts/verify.sh
 ```
 
-Access:
+Clean up:
+```bash
+./scripts/cleanup.sh
+```
+
+### Windows
+
+Deploy:
+```batch
+REM Using batch scripts
+scripts\deploy.bat
+```
+
+Test:
+```batch
+scripts\verify.bat
+```
+
+Clean up:
+```batch
+scripts\cleanup.bat
+```
+
+Or manually:
+```powershell
+# Deploy manifests
+kubectl apply -f k8s/namespace.yaml
+kubectl apply -f k8s/deployment.yaml
+kubectl apply -f k8s/service.yaml
+
+# Wait for deployment
+kubectl wait --for=condition=available deployment/httpbin-deployment -n httpbin-demo --timeout=300s
+```
+
+## Cross-Platform Access
+
+## Cross-Platform Access
+
+### Port Forward (All Platforms)
 ```bash
 # Start port-forward (keeps running until Ctrl+C)
 kubectl port-forward service/httpbin-service 8080:80 -n httpbin-demo
 
-# Then visit http://localhost:8080 in browser or:
+# Then visit http://localhost:8080 in browser
+```
+
+Test with curl (macOS/Linux):
+```bash
 curl http://localhost:8080/json
 curl http://localhost:8080/ip
 curl http://localhost:8080/status/200
 ```
 
-Alternative access methods:
-```bash
-# Via Minikube service (opens browser automatically)
-minikube service httpbin-nodeport -n httpbin-demo
-
-# Via NodePort (get Minikube IP first)
-minikube ip
-# Then access http://<MINIKUBE-IP>:30080
+Test with PowerShell (Windows):
+```powershell
+Invoke-WebRequest -Uri "http://localhost:8080/json"
+Invoke-WebRequest -Uri "http://localhost:8080/ip" 
+Invoke-WebRequest -Uri "http://localhost:8080/status/200"
 ```
 
-Clean up:
+### Minikube Service (All Platforms)
 ```bash
-./scripts/cleanup.sh
+# Opens browser automatically
+minikube service httpbin-nodeport -n httpbin-demo
+```
+
+### NodePort Access (All Platforms)
+```bash
+# Get Minikube IP
+minikube ip
+
+# Then access http://<MINIKUBE-IP>:30080 in browser
 ```
 
 ## Project Structure
@@ -70,9 +137,12 @@ k8s_deployment_demo/
 │   ├── deployment.yaml       # HTTPBin deployment
 │   └── service.yaml          # Services
 ├── scripts/
-│   ├── deploy.sh            # Deploy script
-│   ├── verify.sh            # Test script
-│   └── cleanup.sh           # Cleanup script
+│   ├── deploy.sh            # Deploy script (macOS/Linux)
+│   ├── deploy.bat           # Deploy script (Windows)
+│   ├── verify.sh            # Test script (macOS/Linux)
+│   ├── verify.bat           # Test script (Windows)
+│   ├── cleanup.sh           # Cleanup script (macOS/Linux)
+│   └── cleanup.bat          # Cleanup script (Windows)
 └── README.md                # This file
 ```
 
