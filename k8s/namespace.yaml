@@ -1,0 +1,8 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: httpbin-demo
+  labels:
+    name: httpbin-demo
+    purpose: demo
+    app: httpbin
